@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
 #include <opencv2/opencv.hpp>
 
 #include "../myANN/myANN.cpp"
@@ -41,9 +42,10 @@ int ReverseInt (int i)
 }
 
 void readMnist(string filename, vector<cv::Mat> &vec){
-    ifstream file (filename.c_str(), ios::binary);
-    if (file.is_open())
-    {
+
+    ifstream file(filename.c_str(), ios::binary);
+
+    if (file.is_open()) {
         int magic_number = 0;
         int number_of_images = 0;
         int n_rows = 0;
