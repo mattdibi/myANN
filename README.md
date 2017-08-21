@@ -6,3 +6,6 @@ The network characteristics:
 - Forward propagation
 - Optimization: backpropagation algorithm w/ gradient descent
 
+### Requirements
+- cmake
+- OpenCV
