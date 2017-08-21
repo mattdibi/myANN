@@ -21,8 +21,7 @@ using namespace std;
 //Debug:
 #define INDEX 50
 
-string integerToString(int n)
-{
+string integerToString(int n) {
     string convertedN;
     ostringstream convert;
     convert << n;
@@ -31,8 +30,7 @@ string integerToString(int n)
     return convertedN;
 }
 
-int ReverseInt (int i)
-{
+int ReverseInt (int i) {
     unsigned char ch1, ch2, ch3, ch4;
     ch1 = i & 255;
     ch2 = (i >> 8) & 255;
@@ -60,13 +58,13 @@ void readMnist(string filename, vector<cv::Mat> &vec){
         file.read((char*) &n_cols, sizeof(n_cols));
         n_cols = ReverseInt(n_cols);
 
-        for(int i = 0; i < number_of_images; ++i)
-        {
+        for(int i = 0; i < number_of_images; ++i) {
+
             cv::Mat tp = Mat::zeros(n_rows, n_cols, CV_8UC1);
-            for(int r = 0; r < n_rows; ++r)
-            {
-                for(int c = 0; c < n_cols; ++c)
-                {
+
+            for(int r = 0; r < n_rows; ++r) {
+
+                for(int c = 0; c < n_cols; ++c) {
                     unsigned char temp = 0;
 
                     file.read((char*) &temp, sizeof(temp));
@@ -78,11 +76,11 @@ void readMnist(string filename, vector<cv::Mat> &vec){
     }
 }
 
-void readMnistLabel(string filename, vector<int> &vec)
-{
+void readMnistLabel(string filename, vector<int> &vec) {
+
     ifstream file (filename.c_str(), ios::binary);
-    if (file.is_open())
-    {
+
+    if (file.is_open()) {
         int magic_number = 0;
         int number_of_images = 0;
         int n_rows = 0;
@@ -93,8 +91,7 @@ void readMnistLabel(string filename, vector<int> &vec)
         file.read((char*) &number_of_images,sizeof(number_of_images));
         number_of_images = ReverseInt(number_of_images);
 
-        for(int i = 0; i < number_of_images; ++i)
-        {
+        for(int i = 0; i < number_of_images; ++i) {
             unsigned char temp = 0;
 
             file.read((char*) &temp, sizeof(temp));
@@ -103,13 +100,12 @@ void readMnistLabel(string filename, vector<int> &vec)
     }
 }
 
-vector<cv::Mat> rollVectortoMat(const vector<Mat> &data)
-{
+vector<cv::Mat> rollVectortoMat(const vector<Mat> &data) {
     //Mat dst(static_cast<int>(data.size()), data[0].rows*data[0].cols, CV_32FC1);
     vector<cv::Mat> dst;
 
-    for(unsigned int i = 0; i < data.size(); i++)
-    {
+    for(unsigned int i = 0; i < data.size(); i++) {
+
         Mat image_row = data[i].clone().reshape(1,1);
         Mat image_col;
 
@@ -125,13 +121,11 @@ vector<cv::Mat> rollVectortoMat(const vector<Mat> &data)
     return dst;
 }
 
-vector<cv::Mat> getLabels(const vector<int> &data,int classes = NLABELS)
-{
+vector<cv::Mat> getLabels(const vector<int> &data,int classes = NLABELS) {
     //Mat labels(data.size(),classes,CV_32FC1, float(0));
     vector<cv::Mat> labels;
 
-    for(int i = 0; i <data.size() ; i++)
-    {
+    for(int i = 0; i <data.size() ; i++) {
         // int cls = data[i];  
         // labels.at<float>(i,cls) = 1.0;  
         Mat label(classes,1,CV_32FC1,float(0));
@@ -143,22 +137,19 @@ vector<cv::Mat> getLabels(const vector<int> &data,int classes = NLABELS)
     return labels;
 }
 
-vector<int> interpretPrediction(vector<cv::Mat> predictionMat)
-{
+vector<int> interpretPrediction(vector<cv::Mat> predictionMat) {
+
     int i;
     float max;
     int maxindex;
     vector<int> results;
 
-    for(int j = 0; j < predictionMat.size(); j++)
-    {
+    for(int j = 0; j < predictionMat.size(); j++) {
         max = predictionMat[j].at<float>(0,0);
         maxindex = 0;
 
-        for(i = 0; i < predictionMat[j].rows; i++)
-        {
-            if(predictionMat[j].at<float>(i,0) > max)
-            {
+        for(i = 0; i < predictionMat[j].rows; i++) {
+            if(predictionMat[j].at<float>(i,0) > max) {
                 max = predictionMat[j].at<float>(i,0);
                 maxindex = i;
             }
@@ -170,12 +161,10 @@ vector<int> interpretPrediction(vector<cv::Mat> predictionMat)
     return results;
 }
 
-float correctionRate(vector<int> predictions, vector<int> labels)
-{
+float correctionRate(vector<int> predictions, vector<int> labels) {
     float correctPredictions = 0;
 
-    for(int i = 0; i < predictions.size(); i++)
-    {
+    for(int i = 0; i < predictions.size(); i++) {
         if(predictions[i] == labels[i])
             correctPredictions++;
     }
@@ -184,8 +173,7 @@ float correctionRate(vector<int> predictions, vector<int> labels)
 
 }
 
-int main()
-{
+int main() {
     // 1: READING AND SAVING TRAINING SET
     string filenameImg = "train-images-idx3-ubyte";
 
