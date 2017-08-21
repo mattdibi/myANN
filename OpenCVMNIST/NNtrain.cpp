@@ -5,10 +5,7 @@
 // my blog: http://eric-yuan.me/
 // part of this code is stolen from http://compvisionlab.wordpress.com/
 
-#include "opencv2/core/core.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/ml.hpp"
+#include <opencv2/opencv.hpp>
 #include <math.h>
 #include <fstream>
 #include <iostream>
@@ -27,7 +24,6 @@
 #define INDEX 50
 
 using namespace cv;
-using namespace cv::ml;
 using namespace std;
 
 string integerToString(int n)
