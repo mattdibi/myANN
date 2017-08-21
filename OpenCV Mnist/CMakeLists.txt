@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project( NNtrain )
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} /home/mattia/Scrivania/opencv-3.2.0/build)
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( NNtrain NNtrain.cpp )
+target_link_libraries( NNtrain ${OpenCV_LIBS} )
