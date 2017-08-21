@@ -11,6 +11,13 @@ The network characteristics:
 - OpenCV
 
 ### Results
+
+Specs:
+- CPU: Intel Core i7 4790K (4 cores/8 threads @ 4.4GHz)
+- RAM: 16GB 1600MHz
+
+Training time: ~8 minutes
+
 ```sh
 Correction rate: 90.61%
 Cost function output: 0.652445
