@@ -9,8 +9,7 @@ using namespace std;
 
 int main(int argc, char** argv )
 {
-    cv::Mat t0 = (cv::Mat_<float>(2,3) << -30,  20, 20,
-	 									  10, -20, -20);
+    cv::Mat t0 = (cv::Mat_<float>(2,3) << -30,  20, 20, 10, -20, -20);
     cv::Mat t1 = (cv::Mat_<float>(1,3) << -10, 20 , 20);
 
     vector<cv::Mat> myWeights;
@@ -51,8 +50,7 @@ int main(int argc, char** argv )
     // Testing predict function
     output = ann.predict(testingData);
 
-    for(int i = 0; i < output.size(); i++)
-    {
+    for(int i = 0; i < output.size(); i++) {
         cout << i << ": " << output[i] << "\n";
     }
 
@@ -75,8 +73,7 @@ int main(int argc, char** argv )
 
     output = untrainedANN.predict(testingData);
 
-    for(int i = 0; i < output.size(); i++)
-    {
+    for(int i = 0; i < output.size(); i++) {
         cout << i << ": " << output[i] << "\n";
     }
 
@@ -87,8 +84,7 @@ int main(int argc, char** argv )
 
     output = untrainedANN.predict(testingData);
 
-    for(int i = 0; i < output.size(); i++)
-    {
+    for(int i = 0; i < output.size(); i++) {
         cout << i << ": " << output[i] << "\n";
     }
 

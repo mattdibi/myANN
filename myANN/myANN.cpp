@@ -1,13 +1,11 @@
 #include "myANN.h"
 
-myANN::myANN() 
-{
+myANN::myANN() {
     trained = false;
     created = false;
 }
 
-myANN::myANN(vector<cv::Mat> wms, vector<int> ls) 
-{
+myANN::myANN(vector<cv::Mat> wms, vector<int> ls) {
     weightMatrix = wms;
     layersDescription = ls;
 
@@ -22,28 +20,19 @@ myANN::myANN(vector<cv::Mat> wms, vector<int> ls)
     @return an opencv Mat vector
 
 */
-cv::Mat myANN::computeActivationFunction(cv::Mat v)
-{
+cv::Mat myANN::computeActivationFunction(cv::Mat v) {
     cv::Mat res = cv::Mat(v.rows, 1, CV_32FC1);
 
-    if(v.cols != 1)
-    {
+    if(v.cols != 1) {
         cout << "Assertion v.cols == 1 failed!\n";
         cout << "ERROR: Sigmf received a matrix instead of a vector!\n";
-    }
-    else
-    {
-        if(activationFunction == ACTFUNCT_TANH)
-        {
-            for(int i = 0; i < v.rows; i++)
-            {
+    } else {
+        if(activationFunction == ACTFUNCT_TANH) {
+            for(int i = 0; i < v.rows; i++) {
                 res.at<float>(i,0,0) = tanh(v.at<float>(i,0,0));
             }
-        }
-        else
-        {
-            for(int i = 0; i < v.rows; i++)
-            {
+        } else {
+            for(int i = 0; i < v.rows; i++) {
                 res.at<float>(i,0,0) = 1 / (1 + exp(-1 * v.at<float>(i,0,0)));
             }
         }
@@ -58,14 +47,12 @@ cv::Mat myANN::computeActivationFunction(cv::Mat v)
     @param src the source vector
     @return an opencv mat vector with a bias unit
 */
-cv::Mat myANN::copyAddBias(cv::Mat src)
-{
+cv::Mat myANN::copyAddBias(cv::Mat src) {
     cv::Mat dst = cv::Mat(src.rows + 1, 1, CV_32FC1);
 
     dst.at<float>(0,0,0) = 1;
 
-    for(int i = 0; i < src.rows; i++)
-    {
+    for(int i = 0; i < src.rows; i++) {
         dst.at<float>(i+1,0,0) = src.at<float>(i,0,0);
     }
 
@@ -78,12 +65,10 @@ cv::Mat myANN::copyAddBias(cv::Mat src)
     @param src the source vector
     @return an opencv mat vector without the bias unit
 */
-cv::Mat myANN::copyDelBias(cv::Mat src)
-{
+cv::Mat myANN::copyDelBias(cv::Mat src) {
     cv::Mat dst = cv::Mat(src.rows - 1, 1, CV_32FC1);
 
-    for(int i = 0; i < dst.rows; i++)
-    {
+    for(int i = 0; i < dst.rows; i++) {
         dst.at<float>(i,0,0) = src.at<float>(i+1,0,0);
     }
 
@@ -97,30 +82,21 @@ cv::Mat myANN::copyDelBias(cv::Mat src)
     @param data a Mat vector containing the values of all layers in the Network
     @return a vector of Mat elements as the outputs
 */
-vector<cv::Mat> myANN::forwardPropagate(cv::Mat input) 
-{
+vector<cv::Mat> myANN::forwardPropagate(cv::Mat input) {
     vector<cv::Mat> layer;
 
-    if(input.empty())
-    {
+    if(input.empty()) {
         cout << "Assertion input.size() != 0 failed!\n";
         cout << "ERROR: Empty input vector!\n";
-    }
-    else if(input.cols != 1)
-    {
+    } else if(input.cols != 1) {
         cout << "Assertion input[0].cols == 1 failed!\n";
         cout << "ERROR: input must be a vector!\n";
-    }
-    else if(input.rows != layersDescription[0])
-    {
+    } else if(input.rows != layersDescription[0]) {
         cout << "Assertion data[0].rows == layersDescription[0] - 1 failed!\n";
         cout << "ERROR: data.rows and input layer units must agree!\n";
-    }
-    else
-    {
+    } else {
         // Creating layer vector
-        for(int i = 0; i < layersDescription.size(); i++)
-        {
+        for(int i = 0; i < layersDescription.size(); i++) {
             int rows;
 
             if(i < layersDescription.size() - 1)
@@ -136,9 +112,7 @@ vector<cv::Mat> myANN::forwardPropagate(cv::Mat input)
         //Loading data: layers[0] = input + bias unit;
         layer[0] = copyAddBias(input);
 
-        // TODO: Insert here PRAGMA PIPELINE
-        for(int i = 0; i < layer.size() - 1; i++)
-        {
+        for(int i = 0; i < layer.size() - 1; i++) {
             // TODO: Insert here hardware accelerated function for matrix multipl
             // z(l+1) = W(l)*a(l);
             cv::Mat z = weightMatrix[i] * layer[i];
@@ -168,10 +142,9 @@ vector<cv::Mat> myANN::forwardPropagate(cv::Mat input)
     @return void
 
 */
-void myANN::create(vector<int> layersDescr, int initializationBoundaries = DEFAULT_BOUNDARIES)
-{
-    if(layersDescr.empty())
-    {
+void myANN::create(vector<int> layersDescr, int initializationBoundaries = DEFAULT_BOUNDARIES) {
+
+    if(layersDescr.empty()) {
         cout << "Assertion layersDescr.size() != 0 failed!\n";
         cout << "ERROR: Empty layers descriptors vector!\n";
         return;
@@ -181,8 +154,7 @@ void myANN::create(vector<int> layersDescr, int initializationBoundaries = DEFAU
     weightMatrix.clear();
 
     // Filling weight matrices
-    for(int k = 0; k < layersDescr.size() - 1; k++)
-    {
+    for(int k = 0; k < layersDescr.size() - 1; k++) {
         // Random initialization
         cv::Mat tmp = cv::Mat(layersDescr[k+1], layersDescr[k] + 1, CV_32FC1);
         cv::randu(tmp, cv::Scalar::all(-1*initializationBoundaries), cv::Scalar::all(initializationBoundaries));
@@ -191,8 +163,7 @@ void myANN::create(vector<int> layersDescr, int initializationBoundaries = DEFAU
     }
 
     // Filling costFunctionDerivative
-    for(int l = 0; l < layersDescr.size() - 1; l++)
-    {
+    for(int l = 0; l < layersDescr.size() - 1; l++) {
         cv::Mat tmp = cv::Mat::zeros(layersDescr[l+1], layersDescr[l] + 1, CV_32FC1);
 
         costFunctionDerivative.push_back(tmp);
@@ -219,47 +190,32 @@ void myANN::create(vector<int> layersDescr, int initializationBoundaries = DEFAU
     @param learningRate the learning rate of the backpropagation algorithm
     @return void
 */
-void myANN::train(vector<cv::Mat> data, vector<cv::Mat> expectedOutput)
-{
-    if(data.empty())
-    {
+void myANN::train(vector<cv::Mat> data, vector<cv::Mat> expectedOutput) {
+
+    if(data.empty()) {
         cout << "Assertion data.size() != 0 failed!\n";
         cout << "ERROR: Empty data vector!\n";
-    }
-    else if(data[0].cols != 1)
-    {
+    } else if(data[0].cols != 1) {
         cout << "Assertion data[0].cols == 1 failed!\n";
         cout << "ERROR: data must be a vector!\n";
-    }
-    else if(data[0].rows != layersDescription[0])
-    {
+    } else if(data[0].rows != layersDescription[0]) {
         cout << "Assertion data[0].rows == layers[0].rows failed!\n";
         cout << "ERROR: data.rows and input layer units must agree!\n";
-    }
-    else if(expectedOutput[0].cols != 1)
-    {
+    } else if(expectedOutput[0].cols != 1) {
         cout << "Assertion expectedOutput[0].cols == 1 failed!\n";
         cout << "ERROR: expectedOutput must be a vector!\n";
-    }
-    else if(expectedOutput[0].rows != layersDescription[layersDescription.size()-1])
-    {
+    } else if(expectedOutput[0].rows != layersDescription[layersDescription.size()-1]) {
         cout << "Assertion expectedOutput[0].rows == layers[output_layer].rows failed!\n";
         cout << "ERROR: expectedOutput.rows and output layer units dimensions must agree!\n";
-    }
-    else if(!created)
-    {
+    } else if(!created) {
         cout << "Assertion isCreated() failed!\n";
         cout << "ERROR: Neural Network must be initialized with create() function!\n";
-    }
-    else
-    {
-        for(int iterations = 0; iterations < maxIterations; iterations++)
-        {
+    } else {
+        for(int iterations = 0; iterations < maxIterations; iterations++) {
             int i;
 
             #pragma omp parallel for private(i)
-            for(i = 0; i < data.size(); i++)
-            {   
+            for(i = 0; i < data.size(); i++) {   
                 // // ForwardPropagation
                 vector<cv::Mat> output = forwardPropagate(data[i]);
 
@@ -269,8 +225,7 @@ void myANN::train(vector<cv::Mat> data, vector<cv::Mat> expectedOutput)
                 // Initialize errorLayers vector
                 vector<cv::Mat> errorLayers;
 
-                for(int j = 0; j < layersDescription.size(); j++)
-                {
+                for(int j = 0; j < layersDescription.size(); j++) {
                     int rows;
 
                     if(j < layersDescription.size() - 1)
@@ -287,20 +242,16 @@ void myANN::train(vector<cv::Mat> data, vector<cv::Mat> expectedOutput)
                 errorLayers[layersDescription.size()-1] = output[layersDescription.size()-1] - expectedOutput[i];
 
                 // Error back propagation
-                for(int l = layersDescription.size() - 1; l > 1; l--)
-                {
+                for(int l = layersDescription.size() - 1; l > 1; l--) {
                     cv::Mat transposedWeightMatrix;
                     cv::transpose(weightMatrix[l - 1], transposedWeightMatrix);
 
                     cv::Mat activationFunctionDerivative;
                     
-                    if(activationFunction == ACTFUNCT_SIGM)
-                    {
+                    if(activationFunction == ACTFUNCT_SIGM) {
                         // activationFunctionDerivative = layers[l-1].*(1-layers[l-1]); FOR ACTFUNCT_SIGM
                         cv::multiply(output[l-1], (1-output[l-1]), activationFunctionDerivative);
-                    }
-                    else if(activationFunction == ACTFUNCT_TANH)
-                    {
+                    } else if(activationFunction == ACTFUNCT_TANH) {
                         // activationFunctionDerivative = (1 - tanh(layers[l-1])^2); FOR ACTFUNCT_TANH
                         cv::multiply(computeActivationFunction(output[l-1]),computeActivationFunction(output[l-1]),activationFunctionDerivative);
                         activationFunctionDerivative = 1 - activationFunctionDerivative;
@@ -319,14 +270,12 @@ void myANN::train(vector<cv::Mat> data, vector<cv::Mat> expectedOutput)
                     
                 }
 
-                for(int k = 0; k < layersDescription.size() - 1; k++)
-                {
+                for(int k = 0; k < layersDescription.size() - 1; k++) {
                     cv::Mat transposedLayer;
                     cv::transpose(output[k], transposedLayer);
 
                     // Output layer doesn't need discarding bias unit
-                    if( k < layersDescription.size() - 2)
-                    {
+                    if( k < layersDescription.size() - 2) {
                         // Discarding bias unit delta: d = errorLayers[k+1] - biasUnit;
                         cv::Mat d = copyDelBias(errorLayers[k+1]);
                         costFunctionDerivative[k] += d * transposedLayer;
@@ -337,8 +286,7 @@ void myANN::train(vector<cv::Mat> data, vector<cv::Mat> expectedOutput)
                 /* ******************************************************************* */
             }
 
-            for(int l = 0; l < layersDescription.size() - 1; l++)
-            {
+            for(int l = 0; l < layersDescription.size() - 1; l++) {
                 // Divide costFunctionDerivative for the number of examples
                 costFunctionDerivative[l] = costFunctionDerivative[l]/data.size();
 
@@ -367,31 +315,22 @@ void myANN::train(vector<cv::Mat> data, vector<cv::Mat> expectedOutput)
     @param data a vector of Mat elements
     @return a vector of Mat elements as the outputs
 */
-vector<cv::Mat> myANN::predict(vector<cv::Mat> data) 
-{
+vector<cv::Mat> myANN::predict(vector<cv::Mat> data) {
     vector<cv::Mat> output(data.size());
 
-    if(data.empty())
-    {
+    if(data.empty()) {
         cout << "Assertion data.size() != 0 failed!\n";
         cout << "ERROR: Empty data vector!\n";
-    }
-    else if(data[0].cols != 1)
-    {
+    } else if(data[0].cols != 1) {
         cout << "Assertion data[0].cols == 1 failed!\n";
         cout << "ERROR: data must be a vector!\n";
-    }
-    else if(data[0].rows != layersDescription[0])
-    {
+    } else if(data[0].rows != layersDescription[0]) {
         cout << "Assertion data[0].rows == layers[0].rows failed!\n";
         cout << "ERROR: data.rows and input layer units must agree!\n";
-    }
-    else
-    {
+    } else {
         // For each input compute output layer
         #pragma omp parallel for
-        for(int j = 0; j < data.size(); j++)
-        {
+        for(int j = 0; j < data.size(); j++) {
             // Forward propagate input
             vector<cv::Mat> layersOutput = forwardPropagate(data[j]);
 
@@ -412,60 +351,40 @@ vector<cv::Mat> myANN::predict(vector<cv::Mat> data)
     @param expectedOutput a vector of Mat elements which contains the labels for each input data
     @return the value of the cost function
 */
-float myANN::costFunction(vector<cv::Mat> data, vector<cv::Mat> expectedOutput, bool costFunctionType = COSTFUNCT_QUAD)
-{
+float myANN::costFunction(vector<cv::Mat> data, vector<cv::Mat> expectedOutput, bool costFunctionType = COSTFUNCT_QUAD) {
     float result = 0;
 
-    if(data.empty())
-    {
+    if(data.empty()) {
         cout << "Assertion data.size() != 0 failed!\n";
         cout << "ERROR: Empty data vector!\n";
-    }
-    else if(data[0].cols != 1)
-    {
+    } else if(data[0].cols != 1) {
         cout << "Assertion data[0].cols == 1 failed!\n";
         cout << "ERROR: data must be a vector!\n";
-    }
-    else if(data[0].rows != layersDescription[0])
-    {
+    } else if(data[0].rows != layersDescription[0]) {
         cout << "Assertion data[0].rows == layers[0].rows failed!\n";
         cout << "ERROR: data.rows and input layer units must agree!\n";
-    }
-    else if(expectedOutput[0].cols != 1)
-    {
+    } else if(expectedOutput[0].cols != 1) {
         cout << "Assertion expectedOutput[0].cols == 1 failed!\n";
         cout << "ERROR: expectedOutput must be a vector!\n";
-    }
-    else if(expectedOutput[0].rows != layersDescription[layersDescription.size()-1])
-    {
+    } else if(expectedOutput[0].rows != layersDescription[layersDescription.size()-1]) {
         cout << "Assertion expectedOutput[0].rows == layers[output_layer].rows failed!\n";
         cout << "ERROR: expectedOutput.rows and output layer units dimensions must agree!\n";
-    }
-    else
-    {
+    } else {
 
         vector<cv::Mat> output = predict(data);
 
         // Quadratic cost function implementation
-        if(costFunctionType == COSTFUNCT_QUAD)
-        {
-            for(int i = 0; i < data.size(); i++)
-            {
-                for(int j = 0; j < layersDescription[layersDescription.size()-1]; j++)
-                {
+        if(costFunctionType == COSTFUNCT_QUAD) {
+            for(int i = 0; i < data.size(); i++) {
+                for(int j = 0; j < layersDescription[layersDescription.size()-1]; j++) {
                     result += pow(output[i].at<float>(j,0,0) - expectedOutput[i].at<float>(j,0,0),2);
                 }
             }
 
             result = result / data.size();
-        }
-        // Log cost function implementation
-        else if(costFunctionType == COSTFUNCT_LOGM)
-        {
-            for(int i = 0; i < data.size(); i++)
-            {
-                for(int j = 0; j < layersDescription[layersDescription.size()-1]; j++)
-                {
+        } else if(costFunctionType == COSTFUNCT_LOGM) { // Log cost function implementation
+            for(int i = 0; i < data.size(); i++) {
+                for(int j = 0; j < layersDescription[layersDescription.size()-1]; j++) {
                     result += expectedOutput[i].at<float>(j,0,0)*log(output[i].at<float>(j,0,0))
                                 + (1 - expectedOutput[i].at<float>(j,0,0))*(log(1 - output[i].at<float>(j,0,0)));
                     
@@ -473,9 +392,7 @@ float myANN::costFunction(vector<cv::Mat> data, vector<cv::Mat> expectedOutput, 
             }
 
             result = -1 * (result / data.size());
-        }
-        else
-        {
+        } else {
             cout << "ERROR: Unkown cost function type!\n";
         }
     }
@@ -486,8 +403,7 @@ float myANN::costFunction(vector<cv::Mat> data, vector<cv::Mat> expectedOutput, 
 /**
     It prints all the artificial neural network settings and matrix dimensions
 */
-void myANN::printSettings()
-{
+void myANN::printSettings() {
     cout << "myANN Settings:\n";
     
     if(activationFunction == ACTFUNCT_SIGM)
@@ -502,15 +418,13 @@ void myANN::printSettings()
 
     cout << "- Number of layers: " << layersDescription.size() << endl;
     
-    for(int i = 0; i < layersDescription.size(); i++)
-    {
+    for(int i = 0; i < layersDescription.size(); i++) {
         cout << "-  Layer " << i << " layer dimension: " << layersDescription[i] << endl;
     }
 
     cout << "- Number of matrices: " << weightMatrix.size() << endl;
 
-    for(int i = 0; i < weightMatrix.size(); i++)
-    {
+    for(int i = 0; i < weightMatrix.size(); i++) {
         cout << "-  Layer " << i << " matrix dimension: " << weightMatrix[i].cols << "x" << weightMatrix[i].rows << endl;
     }
 
