@@ -111,8 +111,7 @@ Mat rollVectortoMat(const vector<Mat> &data)
 {
     Mat dst(static_cast<int>(data.size()), data[0].rows*data[0].cols, CV_32FC1);
 
-    for(unsigned int i = 0; i < data.size(); i++)
-    {
+    for(unsigned int i = 0; i < data.size(); i++) {
         Mat image_row = data[i].clone().reshape(1,1);
         Mat row_i = dst.row(i);                                       
         image_row.convertTo(row_i,CV_32FC1, 1/255.);
@@ -225,7 +224,7 @@ int main()
 
     // 5: TRAINING ANN
     cout << "Beginning training.\n";
-    mlp->train(trainData, ROW_SAMPLE, trainLabels);
+    mlp->train(trainData, 0, trainLabels);
     cout << "Training ended.\n";
 
     // SAVING NETWORK
