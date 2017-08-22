@@ -17,7 +17,7 @@ myANN Settings:
 -  Layer 1 layer dimension: 200
 -  Layer 2 layer dimension: 10
 
-real	9m42.199s
-user	70m53.180s
-sys	0m3.432s
+real	23m30.504s
+user	23m29.828s
+sys	0m0.572s
 ```
