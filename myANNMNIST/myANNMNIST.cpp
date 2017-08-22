@@ -250,9 +250,9 @@ int main() {
     // INTERPRETING OUTPUT
     vector<int> predictedDigits = interpretPrediction(output);
 
-    cout << "Pred out\n" << output[0] << endl;
-    cout << "Pred digit" << predictedDigits[0] << endl;
-    cout << "test label" << vecLblTst[0] << endl;
+    // cout << "Pred out\n" << output[0] << endl;
+    // cout << "Pred digit" << predictedDigits[0] << endl;
+    // cout << "test label" << vecLblTst[0] << endl;
 
     // CHECKING HOW MANY PREDICTIONS ARE CORRECT
     cout << "Correction rate: " << correctionRate(predictedDigits, vecLblTst) << "%\n";

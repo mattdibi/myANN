@@ -15,10 +15,10 @@
 #define NLABELS 10 // 0-9
 #define NFEATURES 784 // = 28 * 28 pixels
 
-#define TRAINING_SAMPLE_RESIZE 3500
+#define TRAINING_SAMPLE_RESIZE 18000
 
 // OPTIONAL TESTING
-#define TESTING_SAMPLE_RESIZE 200
+#define TESTING_SAMPLE_RESIZE 10000
 
 //Debug:
 #define INDEX 50
@@ -210,7 +210,7 @@ int main()
     Mat layers = Mat(3,1,CV_32SC1);
 
     layers.row(0) = Scalar(NFEATURES);
-    layers.row(1) = Scalar(1000);
+    layers.row(1) = Scalar(200);
     layers.row(2) = Scalar(NLABELS);
 
     cv::Ptr<cv::ml::ANN_MLP> mlp = cv::ml::ANN_MLP::create();
@@ -220,7 +220,7 @@ int main()
     mlp->setTrainMethod(cv::ml::ANN_MLP::BACKPROP);
     mlp->setBackpropMomentumScale(0.1);
     mlp->setBackpropWeightScale(0.1);
-    mlp->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, (int)100000, 1e-6));
+    mlp->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, (int)350, 1e-6));
 
     // 5: TRAINING ANN
     cout << "Beginning training.\n";
@@ -228,10 +228,8 @@ int main()
     cout << "Training ended.\n";
 
     // SAVING NETWORK
-    mlp->save("ann" + integerToString(trainData.rows) + "samples.xml");
+    // mlp->save("ann" + integerToString(trainData.rows) + "samples.xml");
 
-    /* ****************************************************************************************** */
-    /*
     // OPTIONAL: TESTING ANN WITH TESTING SET
     // READING AND SAVING TEST SET
     string filenameImgTst = "t10k-images-idx3-ubyte";
@@ -263,8 +261,8 @@ int main()
 
     // CHECKING HOW MANY PREDICTIONS ARE CORRECT
     cout << "Correction rate: " << correctionRate(predictedDigits, vecLblTst) << "%\n";
-    */
-    /* ****************************************************************************************** */
+
+    cout << "\nTraining set size: " << TRAINING_SAMPLE_RESIZE << endl;
 
     return 0;
 }
