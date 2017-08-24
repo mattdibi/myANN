@@ -16,6 +16,10 @@ Specs:
 - CPU: Intel Core i7 4790K (4 cores/8 threads @ 4.4GHz)
 - RAM: 16GB 1600MHz
 
+#### Test 1
+- Training set size = 25000 samples
+- Learning rate = 0.75
+
 ```sh
 Correction rate: 90.68%
 Cost function output: 0.643168
@@ -36,4 +40,30 @@ myANN Settings:
 real	9m42.199s
 user	70m53.180s
 sys	0m3.432s
+```
+
+#### Test 2
+- Training set size = 18000 samples
+- Learning rate = 0.1
+
+```sh
+Correction rate: 80.65%
+Cost function output: 1.22711
+
+Training set size: 18000
+myANN Settings:
+- Activation function: SIGMOIDAL
+- Max Iterations: 350
+- Learning Rate: 0.1
+- Number of layers: 3
+-  Layer 0 layer dimension: 784
+-  Layer 1 layer dimension: 200
+-  Layer 2 layer dimension: 10
+- Number of matrices: 2
+-  Layer 0 matrix dimension: 785x200
+-  Layer 1 matrix dimension: 201x10
+
+real	7m22.989s
+user	51m49.860s
+sys	0m3.460s
 ```

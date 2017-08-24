@@ -213,7 +213,7 @@ int main() {
     myANN mlp;
     mlp.create(ld);
     mlp.setActivationFunction(ACTFUNCT_SIGM);
-    mlp.setLearningRate(0.75);
+    mlp.setLearningRate(0.1);
     mlp.setMaxIterations(350);
 
     // 5: TRAINING ANN
