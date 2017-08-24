@@ -23,7 +23,7 @@ user	23m29.828s
 sys	0m0.572s
 ```
 
-#### Test 1
+#### Test 2
 ```sh
 Correction rate: 72.99%
 
